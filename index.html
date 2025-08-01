@@ -1,13 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Project: Rock Paper Scissors</title>
-</head>
-<body>
+  </head>
+  <body>
     <script>
-        
+      function getComputerChoice() {
+        let choix = Math.floor(Math.random() * 3) + 1;
+        if (choix === 0) {
+          return "pierre";
+        } else if (choix === 1) {
+          return "papier";
+        } else {
+          return "ciseaux";
+        }
+      }
+
+      function getHumanChoice() {
+        let choix = prompt("choisir : ( pierre , papier , ciseaux )");
+        if (choix === null) return null;
+        choix = choix.trim().toLowerCase();
+
+        if (choix === "pierre") {
+          return "pierre";
+        } else if (choix === "papier") {
+          return "papier";
+        } else if (choix === "ciseaux") {
+          return "ciseaux";
+        } else {
+          return "erreurs";
+        }
+      }
+
+      function playRound(humanChoice, computerChoice) {
+        if (humanChoice === computerChoice) {
+          console.log(`égalite : ( ${humanChoice} vs ${computerChoice} )`);
+          return "égalite";
+        } else if (
+          (humanChoice === "pierre" && computerChoice === "ciseaux") ||
+          (humanChoice === "ciseaux" && computerChoice === "papier") ||
+          (humanChoice === "papier" && computerChoice === "pierre")
+        ) {
+          console.log(
+            `Tu gagner cette Mancher (${humanChoice} bat ${computerChoice}) `
+          );
+          return "gagné";
+        } else {
+          console.log(
+            `l'ordinateur gagner cette Mancher (${computerChoice} bat ${humanChoice} ) `
+          );
+          return "perdu";
+        }
+      }
+
+      function playGame() {
+        let humanScore = 0;
+        let computerScore = 0;
+
+        for (let index = 0; index < 5; index++) {
+          const ordi = getComputerChoice();
+          const humain = getHumanChoice();
+          const resultat = playRound(humain, ordi);
+
+          if (resultat === "gagné") {
+            humanScore++;
+          } else if (resultat === "perdu") {
+            computerScore++;
+          }
+
+          console.log(
+            `Manche ${
+              index + 1
+            } - ordinateur: ${humanScore} / humain: ${computerScore}`
+          );
+        }
+
+        console.log(
+          `Score final => humain : ${humanScore} / ordinateur : ${computerScore}`
+        );
+
+        if (humanScore > computerScore) {
+          console.log(
+            `le vainceur est l'humain avec : humain = ${humanScore} et ordinateur = ${computerScore}`
+          );
+        } else if (humanScore < computerScore) {
+          console.log(
+            `le vainceur est l'ordinateur avec : ordinateur = ${computerScore} et humain = ${humanScore}`
+          );
+        } else {
+          console.log(
+            `pas de vainceur avec :  Ordinateur = ${computerScore} et humain = ${humanScore}`
+          );
+        }
+      }
+      playGame();
     </script>
-</body>
+  </body>
 </html>
