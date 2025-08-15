@@ -57,7 +57,7 @@ function afficherTotal() {
   }
   score.innerHTML = `
     <p> Le score final : </p>
-    <p> Joueur :  <strong> ${scoreHumain} </strong> | ordinateur : <strong> ${scoreOrdinateur} </strong> </p>
+    <p> Joueur :  <strong> ${scoreHumain} </strong> | Ordinateur : <strong> ${scoreOrdinateur} </strong> </p>
     <p>  <strong> ${messager} </strong>  </p>
   `;
 
