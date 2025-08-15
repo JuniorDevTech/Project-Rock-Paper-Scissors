@@ -69,3 +69,8 @@ function afficherTotal() {
 boutons.pierre.addEventListener("click", () => jouer("pierre"));
 boutons.feuille.addEventListener("click", () => jouer("feuille"));
 boutons.ciseaux.addEventListener("click", () => jouer("ciseaux"));
+
+const rejouer = document.getElementById("rejouer");
+rejouer.addEventListener("click", () => {
+  location.reload();
+});
