@@ -6,71 +6,138 @@ const boutons = {
 
 const resultat = document.getElementById("resultat");
 const score = document.getElementById("score");
+const rejouer = document.getElementById("rejouer");
+
 const choixPossible = ["pierre", "feuille", "ciseaux"];
+
+const emojis = {
+  pierre: "🪨",
+  feuille: "📄",
+  ciseaux: "✂️",
+};
 
 let scoreHumain = 0;
 let scoreOrdinateur = 0;
-let manche = 1;
+let manche = 0;
+
+// On cache le bouton rejouer au départ
+rejouer.style.display = "none";
 
 function jouer(choixUtilisateur) {
-  const choixOrdinateur = choixPossible[Math.floor(Math.random() * 3)];
-  let resultat = "";
+  if (manche >= 5) return;
+
+  manche++;
+
+  const choixOrdinateur =
+    choixPossible[Math.floor(Math.random() * choixPossible.length)];
+
+  let resultatManche = "";
 
   if (choixUtilisateur === choixOrdinateur) {
-    resultat = "egalite";
+    resultatManche = "🤝 Égalité";
   } else if (
     (choixUtilisateur === "pierre" && choixOrdinateur === "ciseaux") ||
     (choixUtilisateur === "ciseaux" && choixOrdinateur === "feuille") ||
     (choixUtilisateur === "feuille" && choixOrdinateur === "pierre")
   ) {
-    resultat = "gagner";
+    resultatManche = "✅ Vous gagnez cette manche";
     scoreHumain++;
   } else {
-    resultat = "perdue";
+    resultatManche = "❌ L'ordinateur gagne cette manche";
     scoreOrdinateur++;
   }
-  manche++;
 
-  if (manche > 5) {
+  afficherResultat(choixUtilisateur, choixOrdinateur, resultatManche);
+
+  if (manche === 5) {
     afficherTotal();
   }
-
-  afficherResultat(choixUtilisateur, choixOrdinateur, resultat);
 }
 
-function afficherResultat(jouer, ordi, res) {
+function afficherResultat(joueur, ordinateur, resultatManche) {
   resultat.innerHTML = `
-     <p> joueur a choisir : <strong> ${jouer} </strong> </p>
-     <p> L'ordinateur a choisir : <strong> ${ordi} </strong> </p>
-      <p>  <strong> ${res} </strong> </p>   
-    `;
+    <h3>Manche ${manche}/5</h3>
+
+    <p>
+      👤 Joueur :
+      <strong>${emojis[joueur]} ${joueur}</strong>
+    </p>
+
+    <p>
+      💻 Ordinateur :
+      <strong>${emojis[ordinateur]} ${ordinateur}</strong>
+    </p>
+
+    <p>
+      <strong>${resultatManche}</strong>
+    </p>
+  `;
+
+  score.innerHTML = `
+    <p>
+      Score : 
+      <strong>${scoreHumain}</strong>
+      -
+      <strong>${scoreOrdinateur}</strong>
+    </p>
+  `;
 }
 
 function afficherTotal() {
-  let messager = "";
+  let messageFinal = "";
+
   if (scoreHumain > scoreOrdinateur) {
-    messager = "vous avez gagner";
+    messageFinal = "🏆 Félicitations ! Vous avez remporté la partie.";
   } else if (scoreHumain < scoreOrdinateur) {
-    messager = "ordinateur a gagner";
+    messageFinal = "😢 L'ordinateur a remporté la partie.";
   } else {
-    messager = "Egalite";
+    messageFinal = "🤝 Match nul !";
   }
-  score.innerHTML = `
-    <p> Le score final : </p>
-    <p> Joueur :  <strong> ${scoreHumain} </strong> | Ordinateur : <strong> ${scoreOrdinateur} </strong> </p>
-    <p>  <strong> ${messager} </strong>  </p>
+
+  score.innerHTML += `
+    <hr>
+    <h2>Fin de la partie</h2>
+
+    <p>
+      Joueur : <strong>${scoreHumain}</strong> |
+      Ordinateur : <strong>${scoreOrdinateur}</strong>
+    </p>
+
+    <p><strong>${messageFinal}</strong></p>
   `;
 
-  document.getElementById("pierre").disabled = true;
-  document.getElementById("feuille").disabled = true;
-  document.getElementById("ciseaux").disabled = true;
+  boutons.pierre.disabled = true;
+  boutons.feuille.disabled = true;
+  boutons.ciseaux.disabled = true;
+
+  rejouer.style.display = "inline-block";
+}
+
+function recommencerPartie() {
+  scoreHumain = 0;
+  scoreOrdinateur = 0;
+  manche = 0;
+
+  resultat.innerHTML =
+    "<p>Choisissez Pierre, Feuille ou Ciseaux pour commencer.</p>";
+
+  score.innerHTML = "<p>Score : <strong>0</strong> - <strong>0</strong></p>";
+
+  boutons.pierre.disabled = false;
+  boutons.feuille.disabled = false;
+  boutons.ciseaux.disabled = false;
+
+  rejouer.style.display = "none";
 }
 
 boutons.pierre.addEventListener("click", () => jouer("pierre"));
 boutons.feuille.addEventListener("click", () => jouer("feuille"));
 boutons.ciseaux.addEventListener("click", () => jouer("ciseaux"));
 
-const rejouer = document.getElementById("rejouer");
-rejouer.addEventListener("click", () => {
-  location.reload();
-});
+rejouer.addEventListener("click", recommencerPartie);
+
+// État initial
+resultat.innerHTML =
+  "<p>Choisissez Pierre, Feuille ou Ciseaux pour commencer.</p>";
+
+score.innerHTML = "<p>Score : <strong>0</strong> - <strong>0</strong></p>";
